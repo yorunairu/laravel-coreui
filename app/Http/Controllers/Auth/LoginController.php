@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -27,20 +28,58 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    protected $redirectTo = RouteServiceProvider::ADMIN_DASHBOARD;
 
     /**
-     * Create a new controller instance.
+     * show login form for admin guard
      *
      * @return void
      */
-    public function __construct()
+    public function showLoginForm()
     {
-        $this->middleware('guest')->except('logout');
+        return view('auth.login');
     }
 
-    public function username()
-    {   
-        return 'email';
+
+    /**
+     * login admin
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function login(Request $request)
+    {
+        // Validate Login Data
+        $request->validate([
+            'email' => 'required|max:50',
+            'password' => 'required',
+        ]);
+
+        // Attempt to login
+        if (Auth::guard('web')->attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
+            // Redirect to dashboard
+            session()->flash('success', 'Successully Logged in !');
+            return redirect()->route('dashboard');
+        } else {
+            // Search using username
+            if (Auth::guard('web')->attempt(['username' => $request->email, 'password' => $request->password], $request->remember)) {
+                session()->flash('success', 'Successully Logged in !');
+                return redirect()->route('dashboard');
+            }
+            // error
+            session()->flash('error', 'Invalid email and password');
+            return back();
+        }
+    }
+
+    /**
+     * logout admin guard
+     *
+     * @return void
+     */
+    public function logout()
+    {
+        Auth::guard('web')->logout();
+        return redirect()->route('login');
     }
 }

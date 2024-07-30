@@ -2,116 +2,166 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
-use App\Http\Requests\StoreUserRequest;
-use App\Http\Requests\UpdateUserRequest;
+use Spatie\Permission\Models\Permission;
 
 class UsersController extends Controller
 {
+
+    public $user;
+
+
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            $this->user = Auth::guard('web')->user();
+            return $next($request);
+        });
+    }
     /**
-     * Display all users
-     * 
+     * Display a listing of the resource.
+     *
      * @return \Illuminate\Http\Response
      */
-    public function index() 
+    public function index()
     {
-        $users = User::latest()->paginate(10);
-
+        // if (is_null($this->user) || !$this->user->can('users')) {
+        //     abort(403, 'Sorry !! You are Unauthorized to view any role !');
+        // }
+        $users = User::all();
         return view('users.index', compact('users'));
     }
 
     /**
-     * Show form for creating user
-     * 
+     * Show the form for creating a new resource.
+     *
      * @return \Illuminate\Http\Response
      */
-    public function create() 
+    public function create()
     {
-        return view('users.create');
+        $roles  = Role::all();
+        return view('users.create', compact('roles'));
     }
 
     /**
-     * Store a newly created user
-     * 
-     * @param User $user
-     * @param StoreUserRequest $request
-     * 
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(User $user, StoreUserRequest $request) 
+    public function store(Request $request)
     {
-        //For demo purposes only. When creating user or inviting a user
-        // you should create a generated random password and email it to the user
-        $user->create(array_merge($request->validated(), [
-            'password' => 'test' 
-        ]));
-
-        return redirect()->route('users.index')
-            ->withSuccess(__('User created successfully.'));
-    }
-
-    /**
-     * Show user data
-     * 
-     * @param User $user
-     * 
-     * @return \Illuminate\Http\Response
-     */
-    public function show(User $user) 
-    {
-        return view('users.show', [
-            'user' => $user
+        // Validation Data
+        $request->validate([
+            'name' => 'required|max:50',
+            'email' => 'required|max:100|email|unique:users',
+            'username' => 'required|max:100|unique:users',
+            'password' => 'required|min:6|confirmed',
         ]);
+
+        // Create New User
+        $user = new User();
+        $user->username = $request->username;
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        if ($request->roles) {
+            $user->assignRole($request->roles);
+        }
+
+        session()->flash('success', 'User has been created !!');
+        // return redirect()->route('pages.users.index');
+        // return view('user')
+        return back();
+
     }
 
     /**
-     * Edit user data
-     * 
-     * @param User $user
-     * 
+     * Display the specified resource.
+     *
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(User $user) 
+    public function show($id)
     {
-        return view('users.edit', [
-            'user' => $user,
-            'userRole' => $user->roles->pluck('name')->toArray(),
-            'roles' => Role::latest()->get()
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        $user = User::find($id);
+        $roles  = Role::all();
+        return view('users.edit', compact('user', 'roles'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        // Create New User
+        $userId = $id;
+        // Validation Data
+        $request->validate([
+            'name' => 'required|max:50',
+            'email' => 'required|max:100|email|unique:users,email,' . $userId,
+            'username' => 'required|max:100|unique:users,username,' . $userId,
+            'password' => 'nullable|min:6|confirmed',
         ]);
+
+        $user = User::findOrFail($id);
+
+        $user->username = $request->username;
+        $user->name = $request->name;
+        $user->email = $request->email;
+        if ($request->password) {
+            $user->password = Hash::make($request->password);
+        }
+        $user->save();
+
+        $user->roles()->detach();
+        if ($request->roles) {
+            $user->assignRole($request->roles);
+        }
+
+        session()->flash('success', 'User has been updated !!');
+        // return back();
+
+        return redirect()->route('users.index')->with('success', 'Edit user successfully');
     }
 
     /**
-     * Update user data
-     * 
-     * @param User $user
-     * @param UpdateUserRequest $request
-     * 
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(User $user, UpdateUserRequest $request) 
+    public function destroy($id)
     {
-        $user->update($request->validated());
+        $user = User::find($id);
+        if (!is_null($user)) {
+            $user->delete();
+        }
 
-        $user->syncRoles($request->get('role'));
-
-        return redirect()->route('users.index')
-            ->withSuccess(__('User updated successfully.'));
-    }
-
-    /**
-     * Delete user data
-     * 
-     * @param User $user
-     * 
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(User $user) 
-    {
-        $user->delete();
-
-        return redirect()->route('users.index')
-            ->withSuccess(__('User deleted successfully.'));
+        session()->flash('success', 'User has been deleted !!');
+        return back();
     }
 }

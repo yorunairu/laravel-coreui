@@ -1,6 +1,29 @@
+// resources/sass/app.scss
+
+// Import variables first
 @import "_variables";
 
+// Import CoreUI styles
 @import "coreui/style.scss";
 
+// Import DataTables styles
+@import "~/datatables.net-bs5/css/dataTables.bootstrap5.min.css";
+// @import "~datatables.net-bs5/css/dataTables.bootstrap5.min.css";
+@import "~/datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css";
+@import "~/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css";
+@import "~/datatables.net-fixedheader-bs5/css/fixedHeader.bootstrap5.min.css";
+@import "~/datatables.net-fixedcolumns-bs5/css/fixedColumns.bootstrap5.min.css";
+@import "~/datatables.net-rowgroup-bs5/css/rowGroup.bootstrap5.min.css";
+@import "~/datatables.net-scroller-bs5/css/scroller.bootstrap5.min.css";
+@import "~/datatables.net-autofill-bs5/css/autoFill.bootstrap5.min.css";
+@import "~/datatables.net-datetime/css/dataTables.dateTime";
+@import "~/select2/src/scss/core";
+@import "@fortawesome/fontawesome-free/css/all.css";
+// @import "~/select2-bootstrap-5-theme/src/select2-bootstrap-5-theme";
+// @import "~/select2-bootstrap-5-theme/src/include-all";
+
+// Import custom styles
 @import "_custom";
 @import "_layout";
+@import "./tender-detail.css";
+@import "./custom.css";

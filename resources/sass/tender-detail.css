@@ -1,0 +1,235 @@
+
+    .form-check-label {
+        text-transform: capitalize;
+    }
+    .document-icon {
+        font-size: 12px; /* Adjust the size as needed */
+        margin-right: 10px;
+        color: #ff5722; /* Change the color if needed */
+    }
+
+    .document-link {
+        display: inline-flex;
+        align-items: center;
+        text-decoration: none;
+        color: #007bff; /* Change the color if needed */
+    }
+
+    .document-link:hover {
+        text-decoration: underline;
+    }
+
+    .document-link i {
+        margin-right: 5px;
+    }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    }
+
+    /* Firefox */
+    input[type=number] {
+    -moz-appearance: textfield;
+    }
+    code {
+        font-family: Monaco, Consolas, "Lucida Console", monospace;
+        background-color: white;
+        font-size: 70%;
+        padding: 4px 8px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+    }
+    pre.code {
+	font-family: Monaco, Consolas, "Lucida Console", monospace;
+        background-color: white;
+        font-size: 70%;
+        padding: 4px 8px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+    }
+    .subdued {
+        font-size: 80%;
+        opacity: 0.6;
+    }
+
+    /* A totally custom override */
+
+    .progress-indicator.custom-complex {
+        background-color: white;
+        padding: 10px 5px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+    }
+    .progress-indicator.custom-complex > li .bubble {
+        height: 12px;
+        width: 99%;
+        border-radius: 2px;
+        box-shadow: inset -5px 0 12px rgba(0, 0, 0, 0.2);
+    }
+    .progress-indicator.custom-complex > li .bubble:before,
+    .progress-indicator.custom-complex > li .bubble:after {
+        display: none;
+    }
+
+    /* Demo for vertical bars */
+
+    .progress-indicator.stepped.stacked {
+        width: 48%;
+        display: inline-block;
+    }
+    .progress-indicator.stepped.stacked > li {
+        height: 150px;
+    }
+    .progress-indicator.stepped.stacked > li .bubble {
+        padding: 0.1em;
+    }
+    .progress-indicator.stepped.stacked > li:first-of-type .bubble {
+        padding: 0.5em;
+    }
+    .progress-indicator.stepped.stacked > li:last-of-type .bubble {
+        padding: 0em;
+    }
+
+    /* Nocenter */
+
+    .progress-indicator.nocenter.stacked > li {
+        min-height: 100px;
+    }
+    .progress-indicator.nocenter.stacked > li span {
+        display: block;
+    }
+
+    /* Demo for Timeline vertical bars */
+
+    #timeline-speaker-example {
+        background-color: #2b4a6d;
+        color: white;
+        padding: 1em 2em;
+        text-align: center;
+        border-radius: 10px;
+    }
+    #timeline-speaker-example .progress-indicator {
+        width: 100%;
+    }
+    #timeline-speaker-example .bubble {
+        padding: 0;
+    }
+    #timeline-speaker-example .progress-indicator > li {
+        color: white !important;
+    }
+    #timeline-speaker-example .time {
+        position: relative;
+        left: -80px;
+        top: 30px;
+        font-size: 130%;
+        text-align: right;
+        opacity: 0.6;
+        font-weight: 100;
+    }
+    #timeline-speaker-example .current-time .time {
+        font-size: 170%;
+        opacity: 1;
+    }
+    #timeline-speaker-example .stacked-text {
+        top: -37px;
+        left: -50px;
+    }
+    #timeline-speaker-example .subdued {
+        font-size: 10px;
+        display: block;
+    }
+    #timeline-speaker-example > li:hover {
+        color: #ff3d54;
+    }
+    #timeline-speaker-example > li:hover .bubble,
+    #timeline-speaker-example > li:hover .bubble:before,
+    #timeline-speaker-example > li:hover .bubble:after {
+        background-color: #ff3d54;
+    }
+    #timeline-speaker-example .current-time .sub-info {
+        font-size: 60%;
+        line-height: 0.2em;
+        text-transform: capitalize;
+        color: #6988be;
+    }
+    @media handheld, screen and (max-width: 400px) {
+        .container {
+            margin: 0;
+            width: 100%;
+        }
+        .progress-indicator.stacked {
+            display: block;
+            width: 100%;
+        }
+        .progress-indicator.stacked > li {
+            height: 80px;
+        }
+    }
+    .progress-indicator-container {
+        width: 100%; /* Full width of its container */
+        overflow-x: auto; /* Enable horizontal scrolling */
+        white-space: nowrap; /* Prevent items from wrapping */
+        padding: 10px 0; /* Padding for spacing */
+    }
+    
+    .progress-indicator.custom-complex {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        background-color: white;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        display: inline-block; /* Display as inline block to enable scrolling */
+    }
+    
+    .progress-indicator.custom-complex > li {
+        display: inline-block; /* Display items in a row */
+        padding: 10px 20px; /* Padding for each step */
+        vertical-align: top; /* Align items vertically */
+        min-width: 150px; /* Minimum width for each step */
+    }
+    
+    .progress-indicator.custom-complex > li .bubble {
+        height: 12px;
+        width: 100%; /* Full width for the bubble */
+        border-radius: 2px;
+        box-shadow: inset -5px 0 12px rgba(0, 0, 0, 0.2);
+    }
+    
+    .progress-indicator.custom-complex > li .fa {
+        margin-right: 5px; /* Adjust icon spacing */
+    }
+    
+    .progress-indicator.custom-complex > li.completed .fa {
+        color: #4CAF50; /* Green color for completed steps */
+    }
+    
+    .progress-indicator.custom-complex > li:not(.completed) .fa {
+        color: #ccc; /* Gray color for incomplete steps */
+    }
+    
+    /* Highlighted step */
+    .progress-indicator.custom-complex > li.highlight {
+        background-color: #35c3f2; /* Highlight background color */
+        animation: blink 1s infinite alternate; /* Blink animation */
+    }
+    
+    @keyframes blink {
+        0% {
+            background-color: white; /* Initial background color */
+            color: #ccc;
+        }
+        100% {
+            background-color: #5EC16C; /* Alternate background color */
+            color: #ccc;
+        }
+    }
+    
+    /* Adjust as needed for responsiveness */
+    @media screen and (max-width: 600px) {
+        .progress-indicator.custom-complex > li {
+            min-width: 100px; /* Adjust minimum width for smaller screens */
+        }
+    }
+    

@@ -1,7 +1,7 @@
 <footer class="footer text-sm">
     <div>
-        <a href="/">Bilas</a>.
-        Copyright &copy; {{ date('Y') }}
+        <a href="https://gemilangteknologi.com/" style="color: black; text-decoration: none;">CV. Gemilang Teknologi</a>.
+        Copyright &copy; 2024
     </div>
-    <div class="ms-auto">Bootstrap Admin Template</div>
+    <div class="ms-auto">Performance Dashboard System</div>
 </footer>

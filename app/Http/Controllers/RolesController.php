@@ -2,37 +2,41 @@
 
 namespace App\Http\Controllers;
 
-use DB;
-use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Route;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
 class RolesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    function __construct()
-    {
+    public $user;
 
+
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            $this->user = Auth::guard('web')->user();
+            return $next($request);
+        });
     }
-    
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
-    {   
-        $roles = Role::orderBy('id','DESC')->paginate(5);
-        return view('roles.index',compact('roles'))
-            ->with('i', ($request->input('page', 1) - 1) * 5);
+    public function index()
+    {
+        if (is_null($this->user) || !$this->user->can('role.view')) {
+            abort(403, 'Sorry !! You are Unauthorized to view any role !');
+        }
+
+        $roles = Role::all();
+        return view('roles.index', compact('roles'));
     }
-    
+
     /**
      * Show the form for creating a new resource.
      *
@@ -40,10 +44,15 @@ class RolesController extends Controller
      */
     public function create()
     {
-        $permissions = Permission::get();
-        return view('roles.create', compact('permissions'));
+        if (is_null($this->user) || !$this->user->can('role.create')) {
+            abort(403, 'Sorry !! You are Unauthorized to create any role !');
+        }
+
+        $all_permissions  = Permission::all();
+        $permission_groups = User::getpermissionGroups();
+        return view('roles.create', compact('all_permissions', 'permission_groups'));
     }
-    
+
     /**
      * Store a newly created resource in storage.
      *
@@ -52,16 +61,29 @@ class RolesController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'name' => 'required|unique:roles,name',
-            'permission' => 'required',
+        if (is_null($this->user) || !$this->user->can('role.create')) {
+            abort(403, 'Sorry !! You are Unauthorized to create any role !');
+        }
+
+        // Validation Data
+        $request->validate([
+            'name' => 'required|max:100|unique:roles'
+        ], [
+            'name.required' => 'Please give a role name'
         ]);
-    
-        $role = Role::create(['name' => $request->get('name')]);
-        $role->syncPermissions($request->get('permission'));
-    
-        return redirect()->route('roles.index')
-                        ->with('success','Role created successfully');
+
+        // Process Data
+        $role = Role::create(['name' => $request->name, 'guard_name' => 'web']);
+
+        // $role = DB::table('roles')->where('name', $request->name)->first();
+        $permissions = $request->input('permissions');
+
+        if (!empty($permissions)) {
+            $role->syncPermissions($permissions);
+        }
+
+        session()->flash('success', 'Role has been created !!');
+        return back();
     }
 
     /**
@@ -70,29 +92,29 @@ class RolesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Role $role)
+    public function show($id)
     {
-        $role = $role;
-        $rolePermissions = $role->permissions;
-    
-        return view('roles.show', compact('role', 'rolePermissions'));
+        //
     }
-    
+
     /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Role $role)
+    public function edit(int $id)
     {
-        $role = $role;
-        $rolePermissions = $role->permissions->pluck('name')->toArray();
-        $permissions = Permission::get();
-    
-        return view('roles.edit', compact('role', 'rolePermissions', 'permissions'));
+        // if (is_null($this->user) || !$this->user->can('role.edit')) {
+        //     abort(403, 'Sorry !! You are Unauthorized to edit any role !');
+        // }
+
+        $role = Role::findById($id);
+        $all_permissions = Permission::all();
+        $permission_groups = User::getpermissionGroups();
+        return view('roles.edit', compact('role', 'all_permissions', 'permission_groups'));
     }
-    
+
     /**
      * Update the specified resource in storage.
      *
@@ -100,19 +122,38 @@ class RolesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Role $role, Request $request)
+    public function update(Request $request, int $id)
     {
-        $this->validate($request, [
-            'name' => 'required',
-            'permission' => 'required',
+        // if (is_null($this->user) || !$this->user->can('role.edit')) {
+        //     abort(403, 'Sorry !! You are Unauthorized to edit any role !');
+        // }
+
+        // TODO: You can delete this in your local. This is for heroku publish.
+        // This is only for Super Admin role,
+        // so that no-one could delete or disable it by somehow.
+        // if ($id === 1) {
+        //     session()->flash('error', 'Sorry !! You are not authorized to edit this role !');
+        //     return back();
+        // }
+
+        // Validation Data
+        $request->validate([
+            'name' => 'required|max:100|unique:roles,name,' . $id
+        ], [
+            'name.required' => 'Please give a role name'
         ]);
-        
-        $role->update($request->only('name'));
-    
-        $role->syncPermissions($request->get('permission'));
-    
-        return redirect()->route('roles.index')
-                        ->with('success','Role updated successfully');
+
+        $role = Role::findById($id); //menghapus admin di dalam findById
+        $permissions = $request->input('permissions');
+
+        if (!empty($permissions)) {
+            $role->name = $request->name;
+            $role->save();
+            $role->syncPermissions($permissions);
+        }
+
+        session()->flash('success', 'Role has been updated !!');
+        return back();
     }
 
     /**
@@ -121,11 +162,26 @@ class RolesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Role $role)
+    public function destroy(int $id)
     {
-        $role->delete();
+        if (is_null($this->user) || !$this->user->can('role.delete')) {
+            abort(403, 'Sorry !! You are Unauthorized to delete any role !');
+        }
 
-        return redirect()->route('roles.index')
-                        ->with('success','Role deleted successfully');
+        // TODO: You can delete this in your local. This is for heroku publish.
+        // This is only for Super Admin role,
+        // so that no-one could delete or disable it by somehow.
+        if ($id === 1) {
+            session()->flash('error', 'Sorry !! You are not authorized to delete this role !');
+            return back();
+        }
+
+        $role = Role::findById($id, 'web');
+        if (!is_null($role)) {
+            $role->delete();
+        }
+
+        session()->flash('success', 'Role has been deleted !!');
+        return back();
     }
 }

@@ -6,6 +6,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('favicon.png') }}">
     <title>
         @if (trim($__env->yieldContent('title')))
         @yield('title') | {{ config('app.name', 'Laravel') }}
@@ -17,17 +18,25 @@
     @stack('before-styles')
     @vite('resources/sass/app.scss')
     @stack('after-styles')
+    <style>
+        .sidebar-nav .nav-link.active{
+            color: #eaeaea;
+            background-color: #4ead57;
+        }
+        .nav-link {
+            color: #eaeaea !important;
+        }
+        .sidebar-nav .nav-link:hover{
+            background-color: #4ead57;
+        }
+    </style>
 </head>
 
 <body>
-    <div class="sidebar sidebar-dark sidebar-fixed" id="sidebar">
+    <div class="sidebar sidebar-dark sidebar-fixed" id="sidebar" style="background-color: #496E4D;">
         <div class="sidebar-brand d-none d-md-flex">
-            <svg class="sidebar-brand-full" width="118" height="46" alt="CoreUI Logo">
-                <use xlink:href="{{ asset('icons/brand.svg#full') }}"></use>
-            </svg>
-            <svg class="sidebar-brand-narrow" width="46" height="46" alt="CoreUI Logo">
-                <use xlink:href="{{ asset('icons/brand.svg#signet') }}"></use>
-            </svg>
+            <img src="{{ asset('images/logo.png') }}" alt="logo kz" class="sidebar-brand-full w-100 h-100">
+            <img src="{{ asset('images/logo.png') }}" alt="logo kz" class="sidebar-brand-narrow w-100 h-100">
         </div>
         @include('layouts.navigation')
         <button class="sidebar-toggler" type="button" data-coreui-toggle="unfoldable"></button>
@@ -54,8 +63,6 @@
     <!-- Scripts -->
     @stack('before-scripts')
 
-    <script src="{{ asset('js/jquery.min.js') }}"></script>
-    <script src="{{ asset('js/coreui.bundle.min.js') }}"></script>
     @vite('resources/js/app.js')
 
     @stack('after-scripts')

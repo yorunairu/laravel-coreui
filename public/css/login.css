@@ -1,0 +1,183 @@
+/* General styles for body and html */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #E0DFDD;
+}
+
+/* Container that takes full width and height */
+.full-width-container {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Panels that take full height */
+.left-panel, .right-panel {
+    height: 100vh;
+}
+
+/* Left panel styling */
+.left-panel {
+    background-color: white;
+    background-image: url('/images/kantor-pusat.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 50px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: #e8f442;
+}
+
+/* Info section styling within left panel */
+.info-section h1 {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+.info-section h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.info-section .info {
+    background-color: #4D7050;
+    color: white;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.info-section .info h3 {
+    margin-top: 0;
+    color: white;
+}
+
+.info-section .info p {
+    color: white;
+}
+
+/* Right panel styling */
+.right-panel {
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Login section styling */
+.login-section {
+    background-color: #4D7050;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+/* Login section header styling */
+.login-section h2 {
+    margin-bottom: 20px;
+    color: white;
+}
+
+/* Input group styling */
+.input-group {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    padding-right: 50px; /* Add padding to the right for the checkbox */
+    border: 1px solid #eeeeee;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+/* Checkbox for show password styling */
+.show-password-checkbox {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    z-index: 1;
+}
+
+/* Text border for text shadow */
+.text-border {
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+/* Button styling for login */
+.login-btn {
+    background-color: #e8f442;
+    color: black;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.login-btn:hover {
+    background-color: #a5aa58;
+}
+
+/* Remember me checkbox styling */
+.remember-me {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.remember-me input {
+    margin-right: 10px;
+}
+
+.remember-me label {
+    margin: 0;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 992px) {
+    .full-width-container {
+        flex-direction: column;
+    }
+
+    .left-panel, .right-panel {
+        width: 100%;
+    }
+
+    .left-panel {
+        display: none;
+    }
+
+    .right-panel {
+        height: auto;
+        padding: 40px 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .login-section {
+        padding: 20px;
+    }
+
+    .input-group input {
+        padding-right: 50px; /* Ensure space for checkbox */
+    }
+}

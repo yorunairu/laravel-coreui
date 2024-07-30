@@ -1,0 +1,46 @@
+.blink-dot {
+    width: 10px !important;
+    height: 10px !important;
+    background-color: green;
+    border-radius: 50%;
+    display: inline-block;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+}
+.select2-selection__choice{
+    padding-left: 20px !important;
+}
+.dataTables_filter{
+    text-align: right !important;
+}
+.progress-indicator {
+    /* Custom styles for your progress indicator */
+}
+
+.bubble {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    display: inline-block;
+    background-color: #e0e0e0; /* Default color */
+}
+
+.completed .bubble {
+    background-color: #007bff; /* Completed color */
+}
+.v-align-middle{
+    vertical-align: middle !important;
+}
+a{
+    text-decoration: none !important;
+}
+
+/* You can adjust other styles as needed */

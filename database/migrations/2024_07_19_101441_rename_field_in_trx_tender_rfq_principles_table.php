@@ -1,0 +1,30 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('trx_tender_rfq_principles', function (Blueprint $table) {
+            $table->dropColumn('date_delivery_goods');
+            $table->string('delivery_goods_days')->nullable()->after('date_delivery');
+        });
+    }
+    
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('trx_tender_rfq_principles', function (Blueprint $table) {
+            $table->date('date_delivery_goods')->nullable()->after('date_delivery');
+            $table->dropColumn('delivery_goods_days');
+        });
+    }
+};

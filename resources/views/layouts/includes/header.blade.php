@@ -7,9 +7,7 @@
             </svg>
         </button>
         <a class="header-brand d-md-none" href="#">
-            <svg width="118" height="46" alt="CoreUI Logo">
-                <use xlink:href="{{ asset('icons/brand.svg#full') }}"></use>
-            </svg>
+            <img src="{{ asset('images/logo.png') }}" alt="logo kz" class="" style="width: 200px">
         </a>
         <ul class="header-nav ms-auto">
 
@@ -47,7 +45,7 @@
         @endauth
         @if (trim($__env->yieldContent('breadcrumbs')))
         <div class="header-divider"></div>
-        <div class="container-fluid">
+        <div class="container-fluid" style="font-size: 1.1rem;">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb my-0 ms-2">
                     @yield('breadcrumbs')
